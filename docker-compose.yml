@@ -1,0 +1,28 @@
+version: "2"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: web_01
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5000:5000"
+      - "5050:5050"
+      - "8000:8000"
+    volumes:
+      - /home/jahed/Documents/code/:/var/tmp/web_server/
+
+    working_dir: /var/tmp/web_server/
+    command: >
+            bash -c "service nginx restart
+            && ln -sf /dev/stdout /var/log/nginx/access.log
+            && ln -sf /dev/stderr /var/log/nginx/error.log
+            && gunicorn docker_hello_world:app
+            && bash"
+    stdin_open: true
+    tty: true
+
+
